@@ -11,31 +11,40 @@ TIMEOUT_END=$(($START_TIME + $timeout))
 while :; do
     echo "Waiting for $url"
 
-    response=$(curl -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/fhir2/R4/metadata?_format=json)
-    response=(${response[@]}) # convert to array
-    code=${response[-1]} # get last element (last line)
+    # TODO: take out redundant approach
+    fhir=0
+    rest=0
 
-    echo "Response Code: $code"
+    if [ $fhir -eq 0 ]; then
+        response=$(curl -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/fhir2/R4/metadata?_format=json)
+        response=(${response[@]}) # convert to array
+        code=${response[-1]} # get last element (last line)
 
-    body=${response[@]::${#response[@]}-1} # get all elements except last
+        echo "Response Code: $code"
 
-    if [[ "${body[0]}" == *"CapabilityStatement"* ]]; then
-        echo "Got Metadata after $(($(date +%s)-$START_TIME)) seconds!"
-        exit 0
-    else
-        echo "Still waiting..."
+        body=${response[@]::${#response[@]}-1} # get all elements except last
+
+        if [[ "${body[0]}" == *"CapabilityStatement"* ]]; then
+            echo "Got FHIR Metadata after $(($(date +%s)-$START_TIME)) seconds!"
+            $fhir=true
+        fi
     fi
-    
-    sleep $interval
-    response=$(curl -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/rest/v1/session)
-    response=(${response[@]}) # convert to array
 
-    code=${response[-1]} # get last element (last line)
+    if [ $rest -eq 0 ]; then
+        response=$(curl -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/rest/v1/session)
+        response=(${response[@]}) # convert to array
 
-    echo "Response Code: $code"
-    
-    if [[ "$code" == "200" ]]; then
-        echo "Got API after $(($(date +%s)-$START_TIME)) seconds!"
+        code=${response[-1]} # get last element (last line)
+
+        echo "Response Code: $code"
+
+        if [[ "$code" == "200" ]]; then
+            echo "Got REST API after $(($(date +%s)-$START_TIME)) seconds!"
+            $rest=true        
+        fi
+    fi
+
+    if [[ $rest && $fhir ]]; then 
         exit 0
     else
         echo "Still waiting..."
