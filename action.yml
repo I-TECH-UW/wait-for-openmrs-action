@@ -1,19 +1,19 @@
 # action.yml
-name: 'Wait For OpenMRS'
-description: 'Wait for OpenMRS to be fully up'
+name: 'Wait For iSantePlus'
+description: 'Wait for iSantePlus to be fully up'
 inputs:
   target-url: 
-    description: 'Where OpenMRS is running'
+    description: 'Where iSantePlus is running'
     required: true
     default: 'http://localhost:8080/openmrs'
   interval: 
-    description: 'How often to check status in s'
-    required: true
-    default: '10
-  timeout: 
-    description: 'How long to try for in s'
+    description: 'How often to check status in ms'
     required: true
     default: '1000'
+  timeout: 
+    description: 'How long to try for in ms'
+    required: true
+    default: '1000000'
 runs:
   using: 'docker'
   image: 'Dockerfile'
