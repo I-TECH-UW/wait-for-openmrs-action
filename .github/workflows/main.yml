@@ -19,7 +19,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Wait For OpenMRS
-        uses: I-TECH-UW/wait-for-openmrs-action@v0.2.0
+        uses: I-TECH-UW/wait-for-openmrs-action@v0.2.1
         with:
           target-url: http://isanteplusdemo.com/openmrs
           interval: 10 # default is 1000
