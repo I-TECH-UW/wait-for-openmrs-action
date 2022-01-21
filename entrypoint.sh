@@ -26,7 +26,7 @@ while :; do
 
         if [[ "${body[0]}" == *"CapabilityStatement"* ]]; then
             echo "Got FHIR Metadata after $(($(date +%s)-$START_TIME)) seconds!"
-            $fhir=true
+            fhir=true
         fi
     fi
 
@@ -40,7 +40,7 @@ while :; do
 
         if [[ "$code" == "200" ]]; then
             echo "Got REST API after $(($(date +%s)-$START_TIME)) seconds!"
-            $rest=true        
+            rest=true        
         fi
     fi
 
