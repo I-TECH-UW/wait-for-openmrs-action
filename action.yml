@@ -21,3 +21,7 @@ runs:
     - ${{ inputs.target-url }} 
     - ${{ inputs.interval }}
     - ${{ inputs.timeout }}
+
+branding:
+  icon: 'watch'  
+  color: 'blue'
