@@ -28,7 +28,7 @@ jobs:
       - name: Wait For iSantePlus
         # You may pin to the exact commit or the version.
         # uses: IsantePlus/wait-for-isanteplus-action@a9fdbebe7b386b60988a793e56f75433b1ccda94
-        uses: IsantePlus/wait-for-isanteplus-action@v0.1.0
+        uses: I-TECH-UW/wait-for-openmrs-action@v0.1.0
         with:
           # Where iSantePlus is running
           target-url: http://isanteplusdemo.com/openmrs
