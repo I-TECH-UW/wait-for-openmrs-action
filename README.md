@@ -17,7 +17,7 @@ The amount of time to try to connect before timing out, in seconds.
 ## Example usage
 
 ```yml
-uses: actions/action-wait-for-isanteplus@v1
+uses: actions/action-wait-for-openmrs@v0.3.0
 with:
   target-url: http://localhost:8080/openmrs
   timeout: 1000
