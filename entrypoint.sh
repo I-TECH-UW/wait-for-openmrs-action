@@ -16,7 +16,7 @@ while :; do
     rest=0
 
     if [ $fhir -eq 0 ]; then
-        response=$(curl -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/fhir2/R4/metadata?_format=json)
+        response=$(curl --max-time 1 -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/fhir2/R4/metadata?_format=json)
         response=(${response[@]}) # convert to array
         code=${response[-1]} # get last element (last line)
 
@@ -26,12 +26,12 @@ while :; do
 
         if [[ "${body[0]}" == *"CapabilityStatement"* ]]; then
             echo "Got FHIR Metadata after $(($(date +%s)-$START_TIME)) seconds!"
-            fhir=true
+            fhir=1
         fi
     fi
 
     if [ $rest -eq 0 ]; then
-        response=$(curl -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/rest/v1/session)
+        response=$(curl --max-time 1 -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/rest/v1/session)
         response=(${response[@]}) # convert to array
 
         code=${response[-1]} # get last element (last line)
@@ -40,11 +40,12 @@ while :; do
 
         if [[ "$code" == "200" ]]; then
             echo "Got REST API after $(($(date +%s)-$START_TIME)) seconds!"
-            rest=true        
+            rest=1        
         fi
     fi
 
-    if [[ $rest && $fhir ]]; then 
+    if [[ $rest -eq 1 && $fhir -eq 1 ]]; then 
+        echo "Exiting!"
         exit 0
     else
         echo "Still waiting..."
