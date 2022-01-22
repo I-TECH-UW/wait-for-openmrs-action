@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Wait For OpenMRS
-        uses: I-TECH-UW/wait-for-openmrs-action@v0.2.3
+        uses: I-TECH-UW/wait-for-openmrs-action@v0.3.0
         with:
           target-url: http://isanteplusdemo.com/openmrs
           interval: 10 # default is 1000
