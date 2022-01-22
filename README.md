@@ -14,6 +14,7 @@ The interval between checking OpenMRS status, in seconds.
 ## `timeout`
 The amount of time to try to connect before timing out, in seconds. 
 **Required** 
+
 ## Example usage
 
 ```yml
@@ -22,4 +23,8 @@ with:
   target-url: http://localhost:8080/openmrs
   timeout: 1000
   interval: 10
+```
+
+```sh
+docker run ghcr.io/i-tech-uw/wait-for-openmrs-action:latest http://openmrs:8080/openmrs 10 10000
 ```
