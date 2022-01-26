@@ -17,7 +17,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  publish:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,6 +39,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          load: true
+          push: false
+          tags: test-image:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Pull containers
+        run: docker-compose pull
+        continue-on-error: true
+
+      - name: Cache containers
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Boot up containers
+        run: docker-compose up -d mysql openmrs
+      
+      - name: Wait for OpenMRS
+        run: docker-compose up --exit-code-from wait wait
+
       - name: Publish Docker image
         uses: docker/build-push-action@v2
         if: github.event_name == 'release'
@@ -49,13 +73,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait For OpenMRS
-        uses: I-TECH-UW/wait-for-openmrs-action@v0.3.0
-        with:
-          target-url: http://isanteplusdemo.com/openmrs
-          interval: 10 # default is 1000
-          timeout: 1000 # default is 1000000

@@ -11,16 +11,12 @@ TIMEOUT_END=$(($START_TIME + $timeout))
 while :; do
     echo "Waiting for $url"
 
-    # TODO: take out redundant approach
     fhir=0
-    rest=0
 
     if [ $fhir -eq 0 ]; then
-        response=$(curl --max-time 1 -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/fhir2/R4/metadata?_format=json)
+        response=$(curl --max-time 2 -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/fhir2/R4/metadata?_format=json)
         response=(${response[@]}) # convert to array
         code=${response[-1]} # get last element (last line)
-
-        echo "Response Code: $code"
 
         body=${response[@]::${#response[@]}-1} # get all elements except last
 
@@ -30,25 +26,11 @@ while :; do
         fi
     fi
 
-    if [ $rest -eq 0 ]; then
-        response=$(curl --max-time 1 -u admin:Admin123 -s -w "\n%{http_code}" $url/ws/rest/v1/session)
-        response=(${response[@]}) # convert to array
-
-        code=${response[-1]} # get last element (last line)
-
-        echo "Response Code: $code"
-
-        if [[ "$code" == "200" ]]; then
-            echo "Got REST API after $(($(date +%s)-$START_TIME)) seconds!"
-            rest=1        
-        fi
-    fi
-
-    if [[ $rest -eq 1 && $fhir -eq 1 ]]; then 
+    if [[ $fhir -eq 1 ]]; then 
         echo "Exiting!"
         exit 0
     else
-        echo "Still waiting..."
+        echo "Got Code $code... Still waiting!"
     fi
 
     if [ $(date +%s) -ge $TIMEOUT_END ]; then

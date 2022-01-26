@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  openmrs:
+    image: openmrs/openmrs-reference-application-distro:latest   
+    hostname: openmrs
+    container_name: openmrs
+    ports:
+      - "8099:8080"
+    healthcheck:
+      test: "exit 0"
+    environment:
+      DB_DATABASE: 'openmrs'
+      DB_HOST: mysql
+      DB_USERNAME: 'mysqluser'
+      DB_PASSWORD: 'mysqlpw'
+      DB_CREATE_TABLES: 'false'
+      DB_AUTO_UPDATE: 'false'
+      MODULE_WEB_ADMIN: 'true'
+      _JAVA_OPTIONS: -Xmx15g -Xms10g
+  
+  mysql:
+    image: us-docker.pkg.dev/cloud-build-fhir/fhir-analytics/openmrs-fhir-mysql-ocl-small:latest
+    hostname: mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: "exit 0"
+    volumes:
+      - ./conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf  # mysql config preconfigured to allow binlog/debezium
+      - ./db:/docker-entrypoint-initdb.d # executes sql files in alphabetical order
+  wait: 
+    image: test-image:latest
+    command:
+    - "http://openmrs:8080/openmrs"
+    - "10" 
+    - "1000"
