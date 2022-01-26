@@ -28,7 +28,7 @@ services:
     healthcheck:
       test: "exit 0"
     volumes:
-      - ./conf:/etc/mysql/mysql.conf.d  # mysql config preconfigured to allow binlog/debezium
+      - ./conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysql.cnf  # mysql config preconfigured to allow binlog/debezium
       - ./db:/docker-entrypoint-initdb.d # executes sql files in alphabetical order
   wait: 
     image: test-image:latest
