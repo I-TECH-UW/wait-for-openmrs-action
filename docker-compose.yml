@@ -33,6 +33,6 @@ services:
   wait: 
     image: test-image:latest
     command:
-    - "http://openmrs:8080"
+    - "http://openmrs:8080/openmrs"
     - "10" 
     - "1000"
