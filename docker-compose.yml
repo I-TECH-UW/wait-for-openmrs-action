@@ -11,7 +11,7 @@ services:
       test: "exit 0"
     environment:
       DB_DATABASE: 'openmrs'
-      DB_HOST: openmrs-fhir-mysql
+      DB_HOST: mysql
       DB_USERNAME: 'mysqluser'
       DB_PASSWORD: 'mysqlpw'
       DB_CREATE_TABLES: 'false'
@@ -33,6 +33,6 @@ services:
   wait: 
     image: test-image:latest
     command:
-    - "http://openmrs:8080/openmrs"
+    - "http://openmrs:8080"
     - "10" 
     - "1000"
