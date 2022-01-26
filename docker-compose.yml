@@ -30,8 +30,6 @@ services:
     volumes:
       - ./conf:/etc/mysql/mysql.conf.d  # mysql config preconfigured to allow binlog/debezium
       - ./dbdump:/docker-entrypoint-initdb.d # executes sql files in alphabetical order
-
-
   wait:
     image: test-image:latest
     command:
