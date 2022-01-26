@@ -30,7 +30,7 @@ while :; do
         echo "Exiting!"
         exit 0
     else
-        echo "Still waiting..."
+        echo "Got Code $code... Still waiting!"
     fi
 
     if [ $(date +%s) -ge $TIMEOUT_END ]; then
