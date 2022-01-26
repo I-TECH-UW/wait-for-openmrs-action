@@ -48,6 +48,14 @@ jobs:
           tags: test-image:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      
+      - name: Pull containers
+        run: docker-compose pull
+        continue-on-error: true
+
+      - name: Cache containers
+        uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
 
       - name: Boot up containers
         run: docker-compose up -d mysql openmrs
